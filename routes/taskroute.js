@@ -53,4 +53,20 @@ router.put("/utasks/:id", auth, async (req, res) => {
   }
 });
 
+// Toggle Task completed status
+router.put("/toggle/:id", auth, async (req, res) => {
+  try {
+    const task = await Task.findOne({ _id: req.params.id, user: req.user.id });
+    if (!task) return res.status(404).json({ msg: "Task not found" });
+
+    task.completed = !task.completed;
+    await task.save();
+
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ msg: "Server Error!", error: err.message });
+  }
+});
+
+
 module.exports = router;
