@@ -37,5 +37,20 @@ router.delete("/dtasks/:id", auth, async (req, res) => {
     return res.status(500).json({ msg: "Server Error!", error: err.message });
   }
 });
+ //status update
+router.put("/utasks/:id", auth, async (req, res) => {
+  try {
+    const { completed } = req.body;
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, user: req.user.id },
+      { completed },
+      { new: true }
+    );
+    if (!task) return res.status(404).json({ msg: "Task not found!" });
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ msg: "Server Error!", error: err.message });
+  }
+});
 
 module.exports = router;
