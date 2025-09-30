@@ -6,11 +6,25 @@ const dotenv = require("dotenv");
 dotenv.config();
 const app = express();
 
-// ✅ CORS config (change for production)
+// ✅ Allowed origins (add more if needed)
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://task-front-rouge.vercel.app", // Vercel frontend
+];
+
+// ✅ Dynamic CORS config
 app.use(cors({
-  origin: "task-front-rouge.vercel.app", // frontend URL
-  methods: ["GET","POST","PUT","DELETE"],
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("CORS not allowed"), false);
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 }));
 
 app.use(express.json());
