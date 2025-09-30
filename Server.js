@@ -8,7 +8,7 @@ const app = express();
 
 // ✅ CORS config (change for production)
 app.use(cors({
-  origin: "http://localhost:5173", // frontend URL
+  origin: "task-front-rouge.vercel.app", // frontend URL
   methods: ["GET","POST","PUT","DELETE"],
   credentials: true
 }));
